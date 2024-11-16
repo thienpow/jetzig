@@ -21,6 +21,40 @@ If you are interested in _Jetzig_ you will probably find these tools interesting
 * [Zine](https://github.com/kristoff-it/zine)
 * [Zinc](https://github.com/zon-dev/zinc/)
 
+
+## The full structure:
+
+1. The root folder builds the jetzig library (src/jetzig.zig)
+2. The `cli/` folder builds the actual `jetzig` executable (cli.zig)
+
+So to build the CLI tool correctly:
+```bash
+cd cli
+zig build
+```
+
+The structure is:
+```
+jetzig/
+├── src/            # Library code
+│   └── jetzig.zig  # Main library file
+├── build.zig       # Library build script
+└── cli/            # CLI tool
+    ├── cli.zig     # Main CLI executable
+    └── build.zig   # CLI build script
+```
+
+The CLI build.zig is much simpler because it:
+1. Only builds one executable
+2. Uses the library from the parent directory
+3. Has its own dependencies configured
+
+To install the CLI tool:
+```bash
+cd cli
+zig build install --prefix ~/.local/
+```
+
 ## Checklist
 
 * :white_check_mark: File system-based routing with [slug] matching.
