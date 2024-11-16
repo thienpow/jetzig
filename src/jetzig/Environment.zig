@@ -277,6 +277,47 @@ pub fn init(parent_allocator: std.mem.Allocator, env_options: EnvironmentOptions
                 },
             },
         );
+
+        // Add SSL logging here
+        if (vars.get("JETQUERY_SSL_ENABLED")) |ssl_enabled| {
+            if (std.mem.eql(u8, ssl_enabled, "true")) {
+                try launch_logger.log(
+                    .INFO,
+                    "Database SSL is enabled",
+                    .{},
+                );
+
+                if (vars.get("JETQUERY_SSL_VERIFY")) |ssl_verify| {
+                    try launch_logger.log(
+                        .INFO,
+                        "SSL verification is {s}",
+                        .{if (std.mem.eql(u8, ssl_verify, "true")) "enabled" else "disabled"},
+                    );
+                }
+
+                if (vars.get("JETQUERY_SSL_CERT_FILE")) |cert_file| {
+                    try launch_logger.log(
+                        .INFO,
+                        "Using SSL certificate: {s}",
+                        .{cert_file},
+                    );
+                }
+
+                if (vars.get("JETQUERY_SSL_CA_FILE")) |ca_file| {
+                    try launch_logger.log(
+                        .INFO,
+                        "Using SSL CA certificate: {s}",
+                        .{ca_file},
+                    );
+                }
+            } else {
+                try launch_logger.log(
+                    .INFO,
+                    "Database SSL is disabled",
+                    .{},
+                );
+            }
+        }
     }
 
     return .{

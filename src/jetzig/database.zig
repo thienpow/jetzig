@@ -56,6 +56,14 @@ pub fn repoEnv(env: jetzig.Environment) !Repo.AdapterOptions {
             .database = env.vars.get("JETQUERY_DATABASE"),
             .pool_size = try env.vars.getT(u16, "JETQUERY_POOL_SIZE"),
             .timeout = try env.vars.getT(u32, "JETQUERY_TIMEOUT"),
+            // Add SSL options
+            .ssl = .{
+                .enabled = if (env.vars.get("JETQUERY_SSL_ENABLED")) |v| std.mem.eql(u8, v, "true") else false,
+                .verify = if (env.vars.get("JETQUERY_SSL_VERIFY")) |v| std.mem.eql(u8, v, "true") else true,
+                .cert_file = env.vars.get("JETQUERY_SSL_CERT_FILE"),
+                .key_file = env.vars.get("JETQUERY_SSL_KEY_FILE"),
+                .ca_file = env.vars.get("JETQUERY_SSL_CA_FILE"),
+            },
         },
     };
 }
